@@ -68,6 +68,7 @@ const ApplyPass = ({ user }) => {
         setLoadingCheck(false);
       }
     };
+    
 
     checkPassStatus();
   }, []);

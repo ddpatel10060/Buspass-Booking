@@ -47,7 +47,7 @@ const Login = () => {
       );
       dispatch(addUser(res.data));
       setSuccess("Login successful!");
-      setTimeout(() => navigate("/"), 1000); // brief success message then redirect
+      setTimeout(() => navigate("/Homepage"), 1000); // brief success message then redirect
     } catch (err) {
       setError(err?.response?.data?.message || "Something went wrong");
     }
@@ -116,7 +116,7 @@ const Login = () => {
       dispatch(addUser(res.data.user));
       localStorage.removeItem("token");
       setSuccess("Account verified! Redirecting...");
-      setTimeout(() => navigate("/"), 1000);
+      setTimeout(() => navigate("/Homepage"), 1000);
     } catch (err) {
       setError(err?.response?.data?.message || "Invalid OTP");
     }

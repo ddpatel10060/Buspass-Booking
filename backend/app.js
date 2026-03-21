@@ -18,6 +18,7 @@ const paymentRouter = require("./src/routes/payment");
 const razorpay = require("razorpay");
 
 const admintokenRoutes = require('./src/routes/admin_routes');
+
 // const llmRouter = require("./src/routes/llm");
 
 // Load environment variables
@@ -106,10 +107,30 @@ connectDB()
   .catch((err) => {
     console.error("Connection Failed: ", err);
   });
+  app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"], 
+    credentials: true,
+  })
+);
   
-  
-  
-  
+// Backend (Express) code example
+app.get("/getbuses", async (req, res) => {
+  try {
+    const { city } = req.query;
+    // Case-insensitive search ke liye regex use karein
+    const buses = await Bus.find({ city: { $regex: new RegExp(city, "i") } });
+    
+    if (buses.length === 0) {
+      return res.status(404).json({ message: "No buses found" });
+    }
+    
+    res.status(200).json(buses);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // const express = require("express");
 // const connectDB = require("./src/database/signup.database");
 // const User = require("./src/model/signup.user")

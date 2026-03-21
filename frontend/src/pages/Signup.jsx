@@ -30,6 +30,17 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const gnuEmailRegex = /^[a-zA-Z0-9._%+-]+@gnu\.ac\.in$/;
+    const emailDomain = "@gnu.ac.in";
+  if (!gnuEmailRegex.test(formData.email.toLowerCase())) {
+    alert("Strict Access: Sirf @gnu.ac.in domain allowed hai. Gmail ya dusre emails block hain.");
+    return; // Yahin se wapas bhej dega, signup stop ho jayega
+  }
+  if (!formData.email.endsWith(emailDomain)) {
+    alert("Access Denied: You must use a @gnu.ac.in email address.");
+    return; // This prevents the axios request from sending
+  }
+    
     try {
       const res = await axios.post(
         `${BASE_URL}/api/signup`,
@@ -57,9 +68,14 @@ const Signup = () => {
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="Enrollment@gnu.ac.in"
+         
+          
+          value={formData.email}
           onChange={handleChange}
-          required
+           required
+          pattern=".+@gnu\.ac\.in"
+          title="Please use your university email ending in @gnu.ac.in"
         />
         <input
           type="text"

@@ -62,7 +62,10 @@ adminRouter.post("/admin/login", async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: "Invalid Password" });
     }
+//dhruv
 
+
+//dhruv
     // Generate JWT token
     const token = await findUser.getJWT();
 
@@ -105,7 +108,32 @@ adminRouter.get("/admin/verify", adminAuth, async (req, res) => {
   }
 });
 
+///code
+// Updated Public endpoint
+adminRouter.get("/getbuses", async (req, res) => {
+  try {
+    let city = req.query.city;
+    if (!city) {
+      return res.status(400).json({ message: "City parameter is required" });
+    }
 
+    // 1. Extra space hatao (.trim())
+    // 2. Case-insensitive search karo ($regex aur 'i')
+    const buses = await Bus.find({ 
+      city: { $regex: new RegExp(city.trim(), 'i') } 
+    });
+
+    if (buses.length === 0) {
+      console.log("No buses found for city:", city); // Debugging ke liye
+      return res.status(404).json({ message: "No buses found for this city" });
+    }
+
+    res.json(buses);
+  } catch (error) {
+    console.error("Error fetching buses:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 // In admin.js - Update the logout endpoint
 // adminRouter.post("/admin/logout", (req, res) => {

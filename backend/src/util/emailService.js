@@ -19,7 +19,7 @@ const sendVerificationEmail = async (email, otp) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Email Verification OTP",
-      // html: `<p>Your verification OTP is: <strong>${otp}</strong></p>`,
+      html: `<p>Your verification OTP is: <strong>${otp}</strong></p>`,
       html: Verification_Email_Template.replace("{verificationCode}", otp),
     };
 

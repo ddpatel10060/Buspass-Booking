@@ -14,6 +14,15 @@ authRouter.post("/signup", async (req, res) => {
   try {
     const { name, email, enrollment, password } = req.body;
 
+    //chnage
+    const allowedDomain = "@gnu.ac.in";
+    
+    if (!email || !email.toLowerCase().endsWith(allowedDomain)) {
+      return res.status(403).json({ 
+        success: false,
+        message: "Registration Failed: only @gnu.ac.in emails allowed .." 
+      });
+    }
     // Validate name length explicitly
     if (!name || name.length < 3) {
       return res.status(400).json({ message: "Name must be at least 3 characters long" });
@@ -123,7 +132,31 @@ authRouter.post("/signup", async (req, res) => {
 //   }
 // });
 
+// ============== Admin Verify Route (Paste this) ============== //
+authRouter.get("/verify", async (req, res) => {
+  try {
+    // 1. Header se token nikaalein
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
 
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Token missing" });
+    }
+
+    // 2. Token ko verify karein
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // 3. Success response bhejein
+    res.status(200).json({ 
+      success: true, 
+      user: decoded 
+    });
+
+  } catch (error) {
+    console.error("JWT Error:", error.message);
+    res.status(401).json({ success: false, message: "Invalid token" });
+  }
+});
 
 // ============== Login Route ============== //
 authRouter.post("/login", async (req, res) => {
@@ -164,6 +197,7 @@ authRouter.post("/login", async (req, res) => {
 
     res.status(200).json({
       success: true,
+      token : token,
       user: {
         name: user.name,
         email: user.email,

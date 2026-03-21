@@ -96,8 +96,9 @@ import Body from "./pages/Body";
 import About from "./pages/About";
 import ApplyPass from "./pages/ApplyPass";
 import Help from "./pages/Help";
+
 import Chat from "./pages/Chat";
-// import Admin from "./pages/Admin";
+//import Admin from "./pages/Admin";
 import ViewPass from "./pages/ViewPass";
 import BusPassDownload from "./pages/ViewPass"; 
 import Admin_Home from './admin_pages/Admin_Home';
@@ -119,9 +120,11 @@ const App = () => {
               <FloatingChatbot />
             </>
           }>
-            <Route index element={<Homepage />} /> {/* Default route */}
+            <Route index element={<Login />} /> {/* Default route */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/homepage" element={<Homepage />} />
+
             <Route path="/profile" element={<Profile />} />
             <Route path="/about" element={<About />} />
             <Route path="/applypass" element={<ApplyPass />} />
@@ -132,9 +135,10 @@ const App = () => {
           <Route path="/admin/login" element={<Admin_Login />} />
           <Route path="/admin/home" element={
             <AdminAuthGuard>
-              <Admin_Home />
+            <Admin_Home />
             </AdminAuthGuard>
           } />
+          
           <Route path="/admin/bus-management" element={
             <AdminAuthGuard>
               <Manage_Bus />

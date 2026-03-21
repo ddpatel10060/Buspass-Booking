@@ -8,7 +8,7 @@ const adminAuth = async (req, res, next) => {
       return res.status(401).send("Please Login!");
     }
 
-    const decodedObj = jwt.verify(token_admin, "Alok@123"); // Use the same secret as in model
+    const decodedObj = jwt.verify(token_admin, "GOJO"); // Use the same secret as in model
 
     const { id } = decodedObj; // Fixed field name to match JWT payload
 

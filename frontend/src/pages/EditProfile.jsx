@@ -30,7 +30,14 @@ const EditProfile = ({ user }) => {
   const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
   const [imageFile, setImageFile] = useState(null);
-
+// Jab Redux store (user) mein data aaye, tab local state update ho jaye
+useEffect(() => {
+  if (user) {
+    setName(user.name || "");
+    setEmail(user.email || "");
+    setEnrollment(user.enrollment || ""); // Ab ye value "23012011054" pakad lega
+  }
+}, [user]); // 'user' change hote hi ye chalega
   useEffect(() => {
     if (user.profileUrl && user.profileUrl.data) {
       const binaryData = new Uint8Array(user.profileUrl.data);

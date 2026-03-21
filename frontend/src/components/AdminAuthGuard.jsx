@@ -1,62 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { BASE_URL } from '../utils/constants';
-import { removeUser } from '../utils/userSlice';
 
 const AdminAuthGuard = ({ children }) => {
-  const user = useSelector((store) => store.user);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const adminToken = localStorage.getItem('adminToken');
-        // If no user in Redux store or no admin token, redirect to login
-        if (!user && !adminToken) {
-          navigate('/admin/login');
-          return;
-        }
+    const checkAuth = () => {
+      // 1. Local storage se token aur user check karein
+      const adminToken = localStorage.getItem('adminToken');
+      const user = localStorage.getItem('user');
 
-        // Verify token with backend
-        const response = await axios.get(`${BASE_URL}/admin/verify`, {
-          withCredentials: true
-        });
-
-        if (!response.data.success) {
-          // Token is invalid, clear user and redirect
-          dispatch(removeUser());
-          navigate('/admin/login');
-        }
-      } catch (error) {
-        console.error('Auth verification failed:', error);
-        // Clear user and redirect to login on any error
-        dispatch(removeUser());
+      // 2. Agar token nahi milta, toh login page par bhej dein
+      if (!adminToken || !user) {
+        console.log("Auth Guard: Access Denied. Redirecting to Login...");
         navigate('/admin/login');
-      } finally {
+      } else {
+        // 3. Agar token hai, toh loading screen hata kar dashboard dikhayein
         setIsLoading(false);
       }
     };
 
     checkAuth();
-  }, [user, dispatch, navigate]);
+  }, [navigate]);
 
-  // Show loading spinner while checking authentication
+  // Jab tak verification ho raha hai, tab tak spinner dikhega
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Verifying authentication...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600 font-semibold text-lg">Verifying Admin Access...</p>
         </div>
       </div>
     );
   }
 
-  // If user is authenticated, render the protected content
+  // Agar authenticated hai, toh actual dashboard components render honge
   return children;
 };
 

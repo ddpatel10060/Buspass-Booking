@@ -70,6 +70,31 @@ router.get('/admin/logout', (req, res) => {
     res.status(500).json({ success: false, message: 'Logout failed', error: error.message });
   }
 });
+//const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+// Payment intent banane ka route
+router.post('/create-checkout-session', async (req, res) => {
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: 'inr',
+          product_data: { name: 'Bus Ticket - Campus Commute' },
+          unit_amount: req.body.amount * 100, // Amount in paise
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: `http://localhost:5173/success`,
+      cancel_url: `http://localhost:5173/cancel`,
+    });
+
+    res.json({ id: session.id });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
 
