@@ -24,7 +24,7 @@ const ApplyPass = ({ user }) => {
     branch: "",
     semester: "",
     shift: "1st Shift",
-    address: "uma hostel",
+    address: "H hostel",
     phone: "",
     parentPhone: "8238871505",
     email: currentUser?.email || "",
